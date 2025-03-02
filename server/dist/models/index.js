@@ -11,6 +11,7 @@ const sequelize = process.env.DB_URL
         dialectOptions: {
             decimalNumbers: true,
         },
+        port: 5433
     });
 const User = UserFactory(sequelize);
 const Ticket = TicketFactory(sequelize);
