@@ -5,13 +5,17 @@ import bcrypt from 'bcrypt';
 export const login = async (req, res) => {
     // TODO: If the user exists and the password is correct, return a JWT token
     const { username, password } = req.body;
+    // Find the user by username in the database
     const user = await User.findOne({
         where: { username },
     });
+     // If user does not exist, return 401
     if (!user) {
         return res.status(401).json({ message: "Authentication failed" });
     }
+    // Compare the provided password from the user with the hashed password stored in the database
     const passwordIsValid = await bcrypt.compare(password, user.password);
+    // If password is incorrect, return 401
     if (!passwordIsValid) {
         return res.status(401).json({ message: "Authentication failed" });
     }
