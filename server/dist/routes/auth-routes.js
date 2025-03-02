@@ -4,22 +4,24 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 export const login = async (req, res) => {
     // TODO: If the user exists and the password is correct, return a JWT token
-    const { username, password } = req.body;
-    // Find the user by username in the database
+    const { username, password } = req.body; // get username and password from the req body
+    //find the user
     const user = await User.findOne({
         where: { username },
     });
-     // If user does not exist, return 401
+    //if not user then return 401 error
     if (!user) {
         return res.status(401).json({ message: "Authentication failed" });
     }
-    // Compare the provided password from the user with the hashed password stored in the database
+    //compare password
     const passwordIsValid = await bcrypt.compare(password, user.password);
-    // If password is incorrect, return 401
+    //if password is not valid return 401 error
     if (!passwordIsValid) {
         return res.status(401).json({ message: "Authentication failed" });
     }
+    // get secret key
     const secretKey = process.env.JWT_SECRET_KEY || "";
+    //token sign for user and allows them to stay signed in for 1hr before expiring
     const token = jwt.sign({ username, id: user.id }, secretKey, { expiresIn: "1h" });
     return res.json({ token });
 };
