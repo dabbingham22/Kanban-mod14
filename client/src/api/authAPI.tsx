@@ -1,5 +1,5 @@
 import { UserLogin } from "../interfaces/UserLogin";
-
+import Auth from '../utils/auth';
 const login = async (userInfo: UserLogin) => {
   // TODO: make a POST request to the login route
 try {
@@ -8,6 +8,7 @@ try {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${Auth.getToken()}`
 
     },
     body: JSON.stringify(userInfo),
